@@ -35,7 +35,7 @@ Add, remove, or update URL components:
 
 ```bash
 # Change protocol
-funURL modify -c https https://vulnerabletarget.com
+funURL modify -c https http://vulnerabletarget.com
 
 # Update path
 funURL modify -p /new/path https://vulnerabletarget.com/old/path
