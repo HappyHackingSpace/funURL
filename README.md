@@ -9,14 +9,6 @@ funURL is a command-line tool designed as a Swiss Army knife for URLs. It takes 
 
 - Golang 1.18+
 
-## Installation
-
-```bash
-git clone https://github.com/HappyHackingSpace/funURL.git
-cd funURL
-./install.sh
-```
-
 ## Features
 
 ### URL Parsing
