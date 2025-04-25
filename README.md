@@ -1,5 +1,11 @@
 # funURL
+
+<img src="img/image.png"> <br>
 funURL is a command-line tool designed as a Swiss Army knife for URLs. It takes a URL as input (via stdin, command-line flags, or arguments) and provides a range of operations for parsing, validation, modification, encoding/decoding, and handling URLs efficiently.
+
+## Requirements
+
+- Golang 1.18+
 
 ## Installation
 
@@ -113,4 +119,5 @@ funURL modify -c https -p /new/path http://vulnerabletarget.com/old
 Hack! don't forget to follow [CONTRIBUTING](./CONTRIBUTING)
 
 ---
-Happy Hacking!
+
+Made with <span aria-label="Love" style="color: #f43f5e">&hearts;</span> @ <a href="https://happyhacking.space" target="_blank">HappyHackingSpace</a>
