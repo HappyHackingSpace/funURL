@@ -1,3 +1,5 @@
+<img src="https://madewithlove.now.sh/af?text=Happy+Hackking+Space" alt="Made with love in Happy Hackking Space">
+
 # funURL
 
 <img src="img/image.png"> <br>
@@ -120,4 +122,4 @@ Hack! don't forget to follow [CONTRIBUTING](./CONTRIBUTING)
 
 ---
 
-Made with <span aria-label="Love" style="color: #f43f5e">&hearts;</span> @ <a href="https://happyhacking.space" target="_blank">HappyHackingSpace</a>
+<img src="img/hhs.svg" alt="Made with love in Happy Hackking Space">
