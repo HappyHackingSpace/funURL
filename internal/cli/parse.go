@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 )
 
@@ -52,6 +53,16 @@ func init() {
 }
 
 func extractUrl(urlString string, protocol, subdomain, tld, hostname, path, query, fragments bool) {
+	tbl := table.NewWriter()
+	tbl.SetStyle(table.StyleLight)
+	tbl.SetOutputMirror(os.Stdout)
+	tbl.AppendHeader(table.Row{"Component", "Value"})
+
+	queryTbl := table.NewWriter()
+	queryTbl.SetStyle(table.StyleLight)
+	queryTbl.SetOutputMirror(os.Stdout)
+	queryTbl.AppendHeader(table.Row{"Query", "Value"})
+
 	parsedUrl := utils.CreateURL(urlString)
 
 	if !protocol && !subdomain && !tld && !hostname && !path && !query && !fragments {
@@ -59,14 +70,16 @@ func extractUrl(urlString string, protocol, subdomain, tld, hostname, path, quer
 	}
 
 	if protocol {
-		fmt.Printf("Protocol: %s\n", parsedUrl.Scheme)
+		tbl.AppendRow(table.Row{"Protocol", utils.StringOrDefault(parsedUrl.Scheme)})
 	}
 
 	if subdomain {
 		host := parsedUrl.Hostname()
 		parts := strings.Split(host, ".")
 		if len(parts) > 2 {
-			fmt.Printf("Subdomain: %s\n", strings.Join(parts[:len(parts)-2], "."))
+			tbl.AppendRow(table.Row{"Subdomain", strings.Join(parts[:len(parts)-2], ".")})
+		} else {
+			tbl.AppendRow(table.Row{"Subdomain", utils.StringOrDefault("")})
 		}
 	}
 
@@ -74,32 +87,42 @@ func extractUrl(urlString string, protocol, subdomain, tld, hostname, path, quer
 		host := parsedUrl.Hostname()
 		parts := strings.Split(host, ".")
 		if len(parts) >= 2 {
-			fmt.Printf("TLD: %s\n", parts[len(parts)-1])
+			tbl.AppendRow(table.Row{"TLD", parts[len(parts)-1]})
+
+		} else {
+			tbl.AppendRow(table.Row{"TLD", utils.StringOrDefault("")})
 		}
 	}
 
 	if hostname {
-		fmt.Printf("Hostname: %s\n", parsedUrl.Hostname())
+		tbl.AppendRow(table.Row{"Hostname", utils.StringOrDefault(parsedUrl.Hostname())})
 	}
 
 	if path {
-		fmt.Printf("Path: %s\n", parsedUrl.Path)
+		tbl.AppendRow(table.Row{"Path", utils.StringOrDefault(parsedUrl.Path)})
 	}
 
 	if query {
 		queryParams := parsedUrl.Query()
 		if len(queryParams) > 0 {
-			var formattedParams []string
+			tbl.AppendRow(table.Row{"Query Params", fmt.Sprintf("%v value", len(queryParams))})
 			for key, values := range queryParams {
 				for _, value := range values {
-					formattedParams = append(formattedParams, fmt.Sprintf("%s=%s", key, value))
+					queryTbl.AppendRow(table.Row{key, utils.StringOrDefault(value)})
 				}
 			}
-			fmt.Printf("Query Params: %s\n", strings.Join(formattedParams, " "))
+		} else {
+			tbl.AppendRow(table.Row{"Query Params", utils.StringOrDefault("")})
 		}
 	}
 
 	if fragments {
-		fmt.Printf("Fragments: %s\n", parsedUrl.Fragment)
+		tbl.AppendRow(table.Row{"Fragments", utils.StringOrDefault(parsedUrl.Fragment)})
+	}
+
+	tbl.Render()
+
+	if query && queryTbl.Length() > 0 {
+		queryTbl.Render()
 	}
 }
