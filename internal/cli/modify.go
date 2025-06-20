@@ -1,11 +1,12 @@
 package cli
 
 import (
-	"HappyHackingSpace/funURL/internal/utils"
 	"bufio"
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/HappyHackingSpace/funURL/internal/utils"
 
 	"github.com/spf13/cobra"
 )
