@@ -24,7 +24,7 @@ builds:
       goarch: 'arm'
 
   binary: '{{ .ProjectName }}'
-  main: cmd/main.go
+  main: cmd/funurl/main.go
 
 archives:
 - formats:
