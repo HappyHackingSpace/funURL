@@ -1,4 +1,4 @@
-module HappyHackingSpace/funURL
+module github.com/HappyHackingSpace/funURL
 
 go 1.24.1
 
