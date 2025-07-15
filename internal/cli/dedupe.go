@@ -66,10 +66,14 @@ var dedupeCmd = &cobra.Command{
 	},
 }
 
+// init registers the dedupeCmd command with the root CLI command.
 func init() {
 	rootCmd.AddCommand(dedupeCmd)
 }
 
+// dedupeUrls prints a deduplicated list of URLs based on normalized path segments and sorted query parameter keys.
+// Path segments that are numeric or contain a dot are replaced with "{param}" for normalization.
+// Only the first occurrence of each unique normalized URL is printed.
 func dedupeUrls(urls iter.Seq[*url.URL]) {
 	seen := make(map[string]*url.URL)
 	var result []*url.URL
@@ -124,6 +128,7 @@ func dedupeUrls(urls iter.Seq[*url.URL]) {
 	}
 }
 
+// isNumeric returns true if the input string consists only of one or more numeric digits.
 func isNumeric(s string) bool {
 	for _, char := range s {
 		if char < '0' || char > '9' {
