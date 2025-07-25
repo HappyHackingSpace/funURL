@@ -77,6 +77,14 @@ funURL decode "hello%20world"
 funURL decode -c "param%3Dvalue%20with%20spaces"
 ```
 
+### Deduping Urls
+
+```bash
+funURL dedupe https://google.com https://google.com/home?qs=value https://google.com/home?qs=secondValue https://google.com/home?qs=newValue&secondQs=anotherValue https://google.com/home?qs=asd&secondQs=das https://site.com/api/users/123 https://site.com/api/users/222 https://site.com/api/users/412/profile https://site.com/users/photos/photo.jpg https://site.com/users/photos/myPhoto.jpg https://site.com/users/photos/photo.png https://google.com/home/?q=2&d=asd https://my.site/profile?param1=1&param2=2 https://my.site/profile?param3=3
+
+cat urls.txt | funURL dedupe
+```
+
 ## Input Methods
 
 funURL supports multiple ways to provide input:

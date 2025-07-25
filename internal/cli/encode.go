@@ -17,7 +17,6 @@ var encodeCmd = &cobra.Command{
 		urlString, _ := cmd.Flags().GetString("url")
 		component, _ := cmd.Flags().GetBool("component")
 		doubled, _ := cmd.Flags().GetBool("double")
-
 		if urlString != "" {
 			encodeURL(urlString, component, doubled)
 		} else if len(args) > 0 {
