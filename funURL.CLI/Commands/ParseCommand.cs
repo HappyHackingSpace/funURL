@@ -83,12 +83,12 @@ public class ParseCommand : Command
     {
         await Console.Out.WriteLineAsync($"{"Scheme:", -10} {uri.Scheme}".AsMemory(), cancellationToken);
         await Console.Out.WriteLineAsync($"{"Subdomain:", -10} {GetSubdomain(uri)}".AsMemory(), cancellationToken);
-        await Console.Out.WriteLineAsync($"{"Host:", -11}{uri.Host}".AsMemory(), cancellationToken);
+        await Console.Out.WriteLineAsync($"{"Host:", -10}{uri.Host}".AsMemory(), cancellationToken);
         await Console.Out.WriteLineAsync($"{"TLD:", -10} {GetTld(uri)}".AsMemory(), cancellationToken);
         await Console.Out.WriteLineAsync($"{"Port:", -10} {(uri.IsDefaultPort ? "(default)" : uri.Port)}".AsMemory(), cancellationToken);
         await Console.Out.WriteLineAsync($"{"Path:", -10} {uri.AbsolutePath}".AsMemory(), cancellationToken);
         await Console.Out.WriteLineAsync($"{"Query:", -10} {uri.Query.TrimStart('?')}".AsMemory(), cancellationToken);
-        await Console.Out.WriteLineAsync($"{"Fragment:", -1} {uri.Fragment.TrimStart('#')}".AsMemory(), cancellationToken);
+        await Console.Out.WriteLineAsync($"{"Fragment:", -10} {uri.Fragment.TrimStart('#')}".AsMemory(), cancellationToken);
     }
 
     internal static string GetSubdomain(Uri uri)

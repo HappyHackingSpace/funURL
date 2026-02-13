@@ -12,7 +12,7 @@ repos:
           - pre-push
           - post-checkout
           - post-rewrite
-        description: Install the .NET tools listed at .config/dotnet-tools.json.
+        description: Install the .NET tools listed at dotnet-tools.json.
 
       - id: csharpier
         name: Run CSharpier on C# files
@@ -33,7 +33,7 @@ repos:
 
       - id: dotnet-test
         name: Run tests
-        entry: dotnet test --list-tests --no-restore --configuration Release
+        entry: dotnet test --no-restore --configuration Release
         language: system
         pass_filenames: false
         types:
