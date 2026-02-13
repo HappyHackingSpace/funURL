@@ -5,21 +5,17 @@ namespace funURL.CLI.Commands;
 
 public partial class DedupeCommand : Command
 {
-    private readonly Argument<string[]> _urlsArgument = new("urls")
-    {
-        Description = "URLs to deduplicate",
-        Arity = ArgumentArity.ZeroOrMore,
-    };
+    private readonly Argument<string[]> urlsArgument = new("urls") { Description = "URLs to deduplicate", Arity = ArgumentArity.ZeroOrMore };
 
     private DedupeCommand()
         : base("dedupe", "Remove duplicate URLs based on structure")
     {
-        Arguments.Add(_urlsArgument);
+        Arguments.Add(urlsArgument);
 
         SetAction(
             async (parseResult, cancellationToken) =>
             {
-                var urls = parseResult.GetValue(_urlsArgument) ?? [];
+                var urls = parseResult.GetValue(urlsArgument) ?? [];
 
                 if (urls.Length == 0)
                 {

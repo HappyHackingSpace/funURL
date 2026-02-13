@@ -45,6 +45,10 @@ jobs:
       - name: Publish
         run: dotnet publish funURL.CLI -c Release -r ${{ matrix.rid }} -o publish
 
+      - name: Copy README and LICENSE
+        shell: pwsh
+        run: Copy-Item README.md, LICENSE.md -Destination publish/
+
       - name: Archive
         shell: pwsh
         run: Compress-Archive -Path publish/* -DestinationPath funurl-${{ matrix.rid }}.zip

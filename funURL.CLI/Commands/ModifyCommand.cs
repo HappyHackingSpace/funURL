@@ -4,29 +4,29 @@ namespace funURL.CLI.Commands;
 
 public class ModifyCommand : Command
 {
-    private readonly Argument<string> _urlArgument = new("url") { Description = "URL to modify" };
+    private readonly Argument<string> urlArgument = new("url") { Description = "URL to modify" };
 
-    private readonly Option<string?> _protocolOption = new("--protocol", "-c") { Description = "Change protocol/scheme" };
+    private readonly Option<string?> protocolOption = new("--protocol", "-c") { Description = "Change protocol/scheme" };
 
-    private readonly Option<string?> _pathOption = new("--path", "-p") { Description = "Update path" };
+    private readonly Option<string?> pathOption = new("--path", "-p") { Description = "Update path" };
 
-    private readonly Option<string?> _queryOption = new("--query", "-q") { Description = "Change query string" };
+    private readonly Option<string?> queryOption = new("--query", "-q") { Description = "Change query string" };
 
-    private readonly Option<string?> _fragmentOption = new("--fragment", "-f") { Description = "Update fragment" };
+    private readonly Option<string?> fragmentOption = new("--fragment", "-f") { Description = "Update fragment" };
 
     private ModifyCommand()
         : base("modify", "Modify components of a URL")
     {
-        Arguments.Add(_urlArgument);
-        Options.Add(_protocolOption);
-        Options.Add(_pathOption);
-        Options.Add(_queryOption);
-        Options.Add(_fragmentOption);
+        Arguments.Add(urlArgument);
+        Options.Add(protocolOption);
+        Options.Add(pathOption);
+        Options.Add(queryOption);
+        Options.Add(fragmentOption);
 
         SetAction(
             async (parseResult, cancellationToken) =>
             {
-                var url = parseResult.GetValue(_urlArgument)!;
+                var url = parseResult.GetValue(urlArgument)!;
 
                 if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
                 {
@@ -34,10 +34,10 @@ public class ModifyCommand : Command
                     return;
                 }
 
-                var protocol = parseResult.GetValue(_protocolOption);
-                var path = parseResult.GetValue(_pathOption);
-                var query = parseResult.GetValue(_queryOption);
-                var fragment = parseResult.GetValue(_fragmentOption);
+                var protocol = parseResult.GetValue(protocolOption);
+                var path = parseResult.GetValue(pathOption);
+                var query = parseResult.GetValue(queryOption);
+                var fragment = parseResult.GetValue(fragmentOption);
 
                 var builder = new UriBuilder(uri);
 
