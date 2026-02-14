@@ -1,18 +1,30 @@
 using System.CommandLine;
+using funURL.CLI.Core;
 
 namespace funURL.CLI.Commands;
 
+/// <summary>
+/// Command to modify URL components.
+/// </summary>
 public class ModifyCommand : Command
 {
     private readonly Argument<string> urlArgument = new("url") { Description = "URL to modify" };
-
-    private readonly Option<string?> protocolOption = new("--protocol", "-c") { Description = "Change protocol/scheme" };
-
-    private readonly Option<string?> pathOption = new("--path", "-p") { Description = "Update path" };
-
-    private readonly Option<string?> queryOption = new("--query", "-q") { Description = "Change query string" };
-
-    private readonly Option<string?> fragmentOption = new("--fragment", "-f") { Description = "Update fragment" };
+    private readonly Option<string?> protocolOption = new("--protocol", "-c")
+    {
+        Description = "Change protocol/scheme"
+    };
+    private readonly Option<string?> pathOption = new("--path", "-p")
+    {
+        Description = "Update path"
+    };
+    private readonly Option<string?> queryOption = new("--query", "-q")
+    {
+        Description = "Change query string"
+    };
+    private readonly Option<string?> fragmentOption = new("--fragment", "-f")
+    {
+        Description = "Update fragment"
+    };
 
     private ModifyCommand()
         : base("modify", "Modify components of a URL")
@@ -23,36 +35,23 @@ public class ModifyCommand : Command
         Options.Add(queryOption);
         Options.Add(fragmentOption);
 
-        SetAction(
-            async (parseResult, cancellationToken) =>
-            {
-                var url = parseResult.GetValue(urlArgument)!;
+        SetAction(async (parseResult, cancellationToken) =>
+        {
+            var url = parseResult.GetValue(urlArgument)!;
+            var protocol = parseResult.GetValue(protocolOption);
+            var path = parseResult.GetValue(pathOption);
+            var query = parseResult.GetValue(queryOption);
+            var fragment = parseResult.GetValue(fragmentOption);
 
-                if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
-                {
-                    await Console.Error.WriteLineAsync($"Invalid URL: {url}".AsMemory(), cancellationToken);
-                    return;
-                }
+            var result = UrlOperations.ValidateUrl(url)
+                .Map(uri => UrlOperations.Modify(uri, protocol, path, query, fragment))
+                .Map(modified => modified.ToString());
 
-                var protocol = parseResult.GetValue(protocolOption);
-                var path = parseResult.GetValue(pathOption);
-                var query = parseResult.GetValue(queryOption);
-                var fragment = parseResult.GetValue(fragmentOption);
-
-                var builder = new UriBuilder(uri);
-
-                if (protocol is not null)
-                    builder.Scheme = protocol;
-                if (path is not null)
-                    builder.Path = path;
-                if (query is not null)
-                    builder.Query = query;
-                if (fragment is not null)
-                    builder.Fragment = fragment;
-
-                await Console.Out.WriteLineAsync(builder.Uri.ToString().AsMemory(), cancellationToken);
-            }
-        );
+            if (result.IsSuccess)
+                await Console.Out.WriteLineAsync(result.Value.AsMemory(), cancellationToken);
+            else
+                await Console.Error.WriteLineAsync(result.Error.AsMemory(), cancellationToken);
+        });
     }
 
     public static ModifyCommand Create() => new();
