@@ -20,23 +20,25 @@ internal readonly record struct UrlComponents(
     string Port,
     string Path,
     string Query,
-    string Fragment)
+    string Fragment
+)
 {
     /// <summary>
     /// Creates a UrlComponents instance from a URI.
     /// </summary>
     /// <param name="uri">The URI to parse</param>
     /// <returns>A new UrlComponents with all components extracted</returns>
-    public static UrlComponents FromUri(Uri uri) => new(
-        Scheme: uri.Scheme,
-        Subdomain: GetSubdomain(uri),
-        Host: uri.Host,
-        Tld: GetTld(uri),
-        Port: uri.IsDefaultPort ? "(default)" : uri.Port.ToString(),
-        Path: uri.AbsolutePath,
-        Query: uri.Query.TrimStart('?'),
-        Fragment: uri.Fragment.TrimStart('#')
-    );
+    public static UrlComponents FromUri(Uri uri) =>
+        new(
+            Scheme: uri.Scheme,
+            Subdomain: GetSubdomain(uri),
+            Host: uri.Host,
+            Tld: GetTld(uri),
+            Port: uri.IsDefaultPort ? "(default)" : uri.Port.ToString(),
+            Path: uri.AbsolutePath,
+            Query: uri.Query.TrimStart('?'),
+            Fragment: uri.Fragment.TrimStart('#')
+        );
 
     /// <summary>
     /// Extracts the subdomain from a URI's host.
@@ -68,13 +70,13 @@ internal readonly record struct UrlComponents(
     /// <returns>Formatted string with all URL components</returns>
     public string FormatAll() =>
         $"""
-        Scheme:     {Scheme}
-        Subdomain:  {Subdomain}
-        Host:       {Host}
-        TLD:        {Tld}
-        Port:       {Port}
-        Path:       {Path}
-        Query:      {Query}
-        Fragment:   {Fragment}
-        """;
+            Scheme:     {Scheme}
+            Subdomain:  {Subdomain}
+            Host:       {Host}
+            TLD:        {Tld}
+            Port:       {Port}
+            Path:       {Path}
+            Query:      {Query}
+            Fragment:   {Fragment}
+            """;
 }

@@ -12,38 +12,35 @@ namespace funURL.CLI.Commands;
 /// </summary>
 public partial class DedupeCommand : Command
 {
-    private readonly Argument<string[]> urlsArgument = new("urls")
-    {
-        Description = "URLs to deduplicate",
-        Arity = ArgumentArity.ZeroOrMore
-    };
+    private readonly Argument<string[]> urlsArgument = new("urls") { Description = "URLs to deduplicate", Arity = ArgumentArity.ZeroOrMore };
 
     private DedupeCommand()
         : base("dedupe", "Remove duplicate URLs based on structure")
     {
         Arguments.Add(urlsArgument);
 
-        SetAction(async (parseResult, cancellationToken) =>
-        {
-            var urls = parseResult.GetValue(urlsArgument) ?? [];
-
-            if (urls.Length == 0)
+        SetAction(
+            async (parseResult, cancellationToken) =>
             {
-                urls = await ReadFromStdinAsync(cancellationToken);
-            }
+                var urls = parseResult.GetValue(urlsArgument) ?? [];
 
-            var uniqueUrls = urls
-                .Select(url => (Original: url.Trim(), Parsed: UrlOperations.ValidateUrl(url.Trim())))
-                .Where(x => x.Parsed.IsSucc)
-                .Select(x => (x.Original, Key: GetStructureKey(x.Parsed.ThrowIfFail())))
-                .DistinctBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
-                .Select(x => x.Original);
+                if (urls.Length == 0)
+                {
+                    urls = await ReadFromStdinAsync(cancellationToken);
+                }
 
-            foreach (var url in uniqueUrls)
-            {
-                await Console.Out.WriteLineAsync(url.AsMemory(), cancellationToken);
+                var uniqueUrls = urls.Select(url => (Original: url.Trim(), Parsed: UrlOperations.ValidateUrl(url.Trim())))
+                    .Where(x => x.Parsed.IsSucc)
+                    .Select(x => (x.Original, Key: GetStructureKey(x.Parsed.ThrowIfFail())))
+                    .DistinctBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
+                    .Select(x => x.Original);
+
+                foreach (var url in uniqueUrls)
+                {
+                    await Console.Out.WriteLineAsync(url.AsMemory(), cancellationToken);
+                }
             }
-        });
+        );
     }
 
     public static DedupeCommand Create() => new();

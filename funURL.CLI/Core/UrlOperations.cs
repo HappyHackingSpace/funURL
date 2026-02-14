@@ -17,8 +17,7 @@ internal static class UrlOperations
     /// <param name="input">The string to encode</param>
     /// <param name="asQuery">If true, uses query component encoding (+ for spaces); otherwise uses URI data string encoding</param>
     /// <returns>The encoded string</returns>
-    public static string Encode(string input, bool asQuery) =>
-        asQuery ? WebUtility.UrlEncode(input) : Uri.EscapeDataString(input);
+    public static string Encode(string input, bool asQuery) => asQuery ? WebUtility.UrlEncode(input) : Uri.EscapeDataString(input);
 
     /// <summary>
     /// Decodes a URL-encoded string.
@@ -26,8 +25,7 @@ internal static class UrlOperations
     /// <param name="input">The encoded string</param>
     /// <param name="asQuery">If true, uses query component decoding (+ becomes space); otherwise uses URI data string decoding</param>
     /// <returns>The decoded string</returns>
-    public static string Decode(string input, bool asQuery) =>
-        asQuery ? WebUtility.UrlDecode(input) : Uri.UnescapeDataString(input);
+    public static string Decode(string input, bool asQuery) => asQuery ? WebUtility.UrlDecode(input) : Uri.UnescapeDataString(input);
 
     /// <summary>
     /// Creates a new URI with modified components.
@@ -64,9 +62,7 @@ internal static class UrlOperations
         if (string.IsNullOrWhiteSpace(url))
             return Error.New("URL cannot be empty");
 
-        return Uri.TryCreate(url, UriKind.Absolute, out var uri)
-            ? Fin<Uri>.Succ(uri)
-            : Error.New($"Invalid URL: {url}");
+        return Uri.TryCreate(url, UriKind.Absolute, out var uri) ? Fin<Uri>.Succ(uri) : Error.New($"Invalid URL: {url}");
     }
 
     /// <summary>

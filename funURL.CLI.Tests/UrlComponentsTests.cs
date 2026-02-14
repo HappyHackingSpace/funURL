@@ -128,7 +128,10 @@ public class UrlComponentsTests
         var components = UrlComponents.FromUri(uri);
 
         // Verify it's a record struct (immutable)
-        var components2 = components with { Scheme = "http" };
+        var components2 = components with
+        {
+            Scheme = "http",
+        };
 
         Assert.Equal("https", components.Scheme);
         Assert.Equal("http", components2.Scheme);
