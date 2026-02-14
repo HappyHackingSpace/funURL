@@ -1,5 +1,7 @@
 using System.CommandLine;
 using funURL.CLI.Core;
+using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace funURL.CLI.Commands;
 
@@ -9,31 +11,31 @@ namespace funURL.CLI.Commands;
 public class ParseCommand : Command
 {
     private readonly Argument<string> urlArgument = new("url") { Description = "URL to parse" };
-    private readonly Option<bool> protocolOption = new("--protocol", "-c")
+    private readonly System.CommandLine.Option<bool> protocolOption = new("--protocol", "-c")
     {
         Description = "Extract protocol/scheme"
     };
-    private readonly Option<bool> subdomainOption = new("--subdomain", "-s")
+    private readonly System.CommandLine.Option<bool> subdomainOption = new("--subdomain", "-s")
     {
         Description = "Extract subdomain"
     };
-    private readonly Option<bool> tldOption = new("--tld", "-t")
+    private readonly System.CommandLine.Option<bool> tldOption = new("--tld", "-t")
     {
         Description = "Extract top-level domain"
     };
-    private readonly Option<bool> hostnameOption = new("--hostname", "-n")
+    private readonly System.CommandLine.Option<bool> hostnameOption = new("--hostname", "-n")
     {
         Description = "Extract hostname"
     };
-    private readonly Option<bool> pathOption = new("--path", "-p")
+    private readonly System.CommandLine.Option<bool> pathOption = new("--path", "-p")
     {
         Description = "Extract path"
     };
-    private readonly Option<bool> queryOption = new("--query", "-q")
+    private readonly System.CommandLine.Option<bool> queryOption = new("--query", "-q")
     {
         Description = "Extract query parameters"
     };
-    private readonly Option<bool> fragmentOption = new("--fragment", "-f")
+    private readonly System.CommandLine.Option<bool> fragmentOption = new("--fragment", "-f")
     {
         Description = "Extract fragment"
     };
@@ -56,36 +58,38 @@ public class ParseCommand : Command
 
             var result = UrlOperations.ValidateUrl(url).Map(UrlComponents.FromUri);
 
-            if (!result.IsSuccess)
-            {
-                await Console.Error.WriteLineAsync(result.Error.AsMemory(), cancellationToken);
-                return;
-            }
+            await result.Match(
+                Fail: async error =>
+                {
+                    await Console.Error.WriteLineAsync(error.Message.AsMemory(), cancellationToken);
+                },
+                Succ: async components =>
+                {
+                    var selectedOptions = new[]
+                    {
+                        (parseResult.GetValue(protocolOption), components.Scheme),
+                        (parseResult.GetValue(subdomainOption), components.Subdomain),
+                        (parseResult.GetValue(tldOption), components.Tld),
+                        (parseResult.GetValue(hostnameOption), components.Host),
+                        (parseResult.GetValue(pathOption), components.Path),
+                        (parseResult.GetValue(queryOption), components.Query),
+                        (parseResult.GetValue(fragmentOption), components.Fragment)
+                    };
 
-            var components = result.Value;
-            var selectedOptions = new[]
-            {
-                (parseResult.GetValue(protocolOption), components.Scheme),
-                (parseResult.GetValue(subdomainOption), components.Subdomain),
-                (parseResult.GetValue(tldOption), components.Tld),
-                (parseResult.GetValue(hostnameOption), components.Host),
-                (parseResult.GetValue(pathOption), components.Path),
-                (parseResult.GetValue(queryOption), components.Query),
-                (parseResult.GetValue(fragmentOption), components.Fragment)
-            };
+                    var anyFlagSet = selectedOptions.Any(opt => opt.Item1);
 
-            var anyFlagSet = selectedOptions.Any(opt => opt.Item1);
+                    if (!anyFlagSet)
+                    {
+                        await Console.Out.WriteLineAsync(components.FormatAll().AsMemory(), cancellationToken);
+                        return;
+                    }
 
-            if (!anyFlagSet)
-            {
-                await Console.Out.WriteLineAsync(components.FormatAll().AsMemory(), cancellationToken);
-                return;
-            }
-
-            foreach (var (isSelected, value) in selectedOptions.Where(opt => opt.Item1))
-            {
-                await Console.Out.WriteLineAsync(value.AsMemory(), cancellationToken);
-            }
+                    foreach (var (isSelected, value) in selectedOptions.Where(opt => opt.Item1))
+                    {
+                        await Console.Out.WriteLineAsync(value.AsMemory(), cancellationToken);
+                    }
+                }
+            );
         });
     }
 

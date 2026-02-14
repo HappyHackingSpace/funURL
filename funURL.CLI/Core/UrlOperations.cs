@@ -1,4 +1,7 @@
 using System.Net;
+using LanguageExt;
+using LanguageExt.Common;
+using static LanguageExt.Prelude;
 
 namespace funURL.CLI.Core;
 
@@ -55,15 +58,15 @@ internal static class UrlOperations
     /// Validates and parses a URL string into a URI.
     /// </summary>
     /// <param name="url">The URL string to parse</param>
-    /// <returns>A Result containing the parsed URI or an error message</returns>
-    public static Result<Uri> ValidateUrl(string url)
+    /// <returns>A Fin containing the parsed URI or an error</returns>
+    public static Fin<Uri> ValidateUrl(string url)
     {
         if (string.IsNullOrWhiteSpace(url))
-            return Result<Uri>.Failure("URL cannot be empty");
+            return Error.New("URL cannot be empty");
 
         return Uri.TryCreate(url, UriKind.Absolute, out var uri)
-            ? Result<Uri>.Success(uri)
-            : Result<Uri>.Failure($"Invalid URL: {url}");
+            ? Fin<Uri>.Succ(uri)
+            : Error.New($"Invalid URL: {url}");
     }
 
     /// <summary>
@@ -71,12 +74,12 @@ internal static class UrlOperations
     /// </summary>
     /// <param name="input">The input string to validate</param>
     /// <param name="parameterName">Name of the parameter for error messages</param>
-    /// <returns>A Result containing the input or an error message</returns>
-    public static Result<string> ValidateInput(string input, string parameterName = "Input")
+    /// <returns>A Fin containing the input or an error</returns>
+    public static Fin<string> ValidateInput(string input, string parameterName = "Input")
     {
         if (string.IsNullOrWhiteSpace(input))
-            return Result<string>.Failure($"{parameterName} cannot be empty");
+            return Error.New($"{parameterName} cannot be empty");
 
-        return Result<string>.Success(input);
+        return Fin<string>.Succ(input);
     }
 }

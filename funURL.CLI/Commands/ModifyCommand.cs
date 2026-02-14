@@ -1,5 +1,7 @@
 using System.CommandLine;
 using funURL.CLI.Core;
+using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace funURL.CLI.Commands;
 
@@ -9,19 +11,19 @@ namespace funURL.CLI.Commands;
 public class ModifyCommand : Command
 {
     private readonly Argument<string> urlArgument = new("url") { Description = "URL to modify" };
-    private readonly Option<string?> protocolOption = new("--protocol", "-c")
+    private readonly System.CommandLine.Option<string?> protocolOption = new("--protocol", "-c")
     {
         Description = "Change protocol/scheme"
     };
-    private readonly Option<string?> pathOption = new("--path", "-p")
+    private readonly System.CommandLine.Option<string?> pathOption = new("--path", "-p")
     {
         Description = "Update path"
     };
-    private readonly Option<string?> queryOption = new("--query", "-q")
+    private readonly System.CommandLine.Option<string?> queryOption = new("--query", "-q")
     {
         Description = "Change query string"
     };
-    private readonly Option<string?> fragmentOption = new("--fragment", "-f")
+    private readonly System.CommandLine.Option<string?> fragmentOption = new("--fragment", "-f")
     {
         Description = "Update fragment"
     };
@@ -47,10 +49,10 @@ public class ModifyCommand : Command
                 .Map(uri => UrlOperations.Modify(uri, protocol, path, query, fragment))
                 .Map(modified => modified.ToString());
 
-            if (result.IsSuccess)
-                await Console.Out.WriteLineAsync(result.Value.AsMemory(), cancellationToken);
-            else
-                await Console.Error.WriteLineAsync(result.Error.AsMemory(), cancellationToken);
+            await result.Match(
+                Succ: async value => await Console.Out.WriteLineAsync(value.AsMemory(), cancellationToken),
+                Fail: async error => await Console.Error.WriteLineAsync(error.Message.AsMemory(), cancellationToken)
+            );
         });
     }
 

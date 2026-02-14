@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="funURL.CLI.Tests" />
+    <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
     <PackageReference Include="System.CommandLine" Version="2.0.3" />
   </ItemGroup>
 

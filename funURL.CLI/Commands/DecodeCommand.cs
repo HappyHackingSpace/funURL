@@ -1,5 +1,7 @@
 using System.CommandLine;
 using funURL.CLI.Core;
+using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace funURL.CLI.Commands;
 
@@ -9,7 +11,7 @@ namespace funURL.CLI.Commands;
 public class DecodeCommand : Command
 {
     private readonly Argument<string> inputArgument = new("input") { Description = "String to decode" };
-    private readonly Option<bool> queryOption = new("--query", "-c")
+    private readonly System.CommandLine.Option<bool> queryOption = new("--query", "-c")
     {
         Description = "Decode as query component (handles + as spaces)"
     };
@@ -28,10 +30,10 @@ public class DecodeCommand : Command
             var result = UrlOperations.ValidateInput(input, "Input")
                 .Map(validInput => UrlOperations.Decode(validInput, asQuery));
 
-            if (result.IsSuccess)
-                await Console.Out.WriteLineAsync(result.Value.AsMemory(), cancellationToken);
-            else
-                await Console.Error.WriteLineAsync(result.Error.AsMemory(), cancellationToken);
+            await result.Match(
+                Succ: async value => await Console.Out.WriteLineAsync(value.AsMemory(), cancellationToken),
+                Fail: async error => await Console.Error.WriteLineAsync(error.Message.AsMemory(), cancellationToken)
+            );
         });
     }
 

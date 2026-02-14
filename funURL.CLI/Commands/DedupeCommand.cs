@@ -1,6 +1,8 @@
 using System.CommandLine;
 using System.Text.RegularExpressions;
 using funURL.CLI.Core;
+using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace funURL.CLI.Commands;
 
@@ -32,8 +34,8 @@ public partial class DedupeCommand : Command
 
             var uniqueUrls = urls
                 .Select(url => (Original: url.Trim(), Parsed: UrlOperations.ValidateUrl(url.Trim())))
-                .Where(x => x.Parsed.IsSuccess)
-                .Select(x => (x.Original, Key: GetStructureKey(x.Parsed.Value)))
+                .Where(x => x.Parsed.IsSucc)
+                .Select(x => (x.Original, Key: GetStructureKey(x.Parsed.ThrowIfFail())))
                 .DistinctBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
                 .Select(x => x.Original);
 

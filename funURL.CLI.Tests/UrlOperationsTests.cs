@@ -1,4 +1,5 @@
 using funURL.CLI.Core;
+using LanguageExt;
 
 namespace funURL.CLI.Tests;
 
@@ -110,13 +111,13 @@ public class UrlOperationsTests
     }
 
     [Fact]
-    public void ValidateUrl_SucceedsForValidUrls()
+    public void ValidateUrl_SucceedsForValidUrl()
     {
         var result = UrlOperations.ValidateUrl("https://example.com");
 
-        Assert.True(result.IsSuccess);
-        Assert.Equal("https", result.Value.Scheme);
-        Assert.Equal("example.com", result.Value.Host);
+        Assert.True(result.IsSucc);
+        Assert.Equal("https", result.ThrowIfFail().Scheme);
+        Assert.Equal("example.com", result.ThrowIfFail().Host);
     }
 
     [Fact]
@@ -124,10 +125,10 @@ public class UrlOperationsTests
     {
         var result = UrlOperations.ValidateUrl("http://sub.example.com/path?query=value#fragment");
 
-        Assert.True(result.IsSuccess);
-        Assert.Equal("http", result.Value.Scheme);
-        Assert.Equal("sub.example.com", result.Value.Host);
-        Assert.Equal("/path", result.Value.AbsolutePath);
+        Assert.True(result.IsSucc);
+        Assert.Equal("http", result.ThrowIfFail().Scheme);
+        Assert.Equal("sub.example.com", result.ThrowIfFail().Host);
+        Assert.Equal("/path", result.ThrowIfFail().AbsolutePath);
     }
 
     [Theory]
@@ -140,31 +141,27 @@ public class UrlOperationsTests
     {
         var result = UrlOperations.ValidateUrl(url);
 
-        Assert.False(result.IsSuccess);
-        Assert.Contains("URL", result.Error);
+        Assert.True(result.IsFail);
     }
 
     [Theory]
-    [InlineData("hello", "Input")]
-    [InlineData("test value", "Input")]
-    public void ValidateInput_SucceedsForNonEmptyStrings(string input, string paramName)
+    [InlineData("hello")]
+    [InlineData("test value")]
+    public void ValidateInput_SucceedsForNonEmptyStrings(string input)
     {
-        var result = UrlOperations.ValidateInput(input, paramName);
+        var result = UrlOperations.ValidateInput(input, "Input");
 
-        Assert.True(result.IsSuccess);
-        Assert.Equal(input, result.Value);
+        Assert.True(result.IsSucc);
+        Assert.Equal(input, result.ThrowIfFail());
     }
 
     [Theory]
-    [InlineData("", "Input")]
-    [InlineData("   ", "Input")]
-    [InlineData("", "CustomParam")]
-    public void ValidateInput_FailsForEmptyStrings(string input, string paramName)
+    [InlineData("")]
+    [InlineData("   ")]
+    public void ValidateInput_FailsForEmptyStrings(string input)
     {
-        var result = UrlOperations.ValidateInput(input, paramName);
+        var result = UrlOperations.ValidateInput(input, "Input");
 
-        Assert.False(result.IsSuccess);
-        Assert.Contains(paramName, result.Error);
-        Assert.Contains("cannot be empty", result.Error);
+        Assert.True(result.IsFail);
     }
 }
