@@ -3,8 +3,6 @@ CLI_PROJECT := funURL.CLI
 TEST_PROJECT := funURL.CLI.Tests
 CONFIGURATION := Release
 
-INSTALL_DIR := /usr/local/bin
-
 .PHONY: build test run clean publish restore install uninstall
 
 build:
@@ -25,9 +23,3 @@ restore:
 
 publish:
 	dotnet publish $(CLI_PROJECT) -c $(CONFIGURATION) -o artifacts
-
-install: publish
-	cp artifacts/funurl $(INSTALL_DIR)/funurl
-
-uninstall:
-	rm -f $(INSTALL_DIR)/funurl
