@@ -12,18 +12,6 @@ funURL is a command-line tool designed as a Swiss Army knife for URLs. It takes 
 
 Download the latest binary for your platform from the [Releases](https://github.com/HappyHackingSpace/funURL/releases) page.
 
-Or build and install from source:
-```bash
-git clone https://github.com/HappyHackingSpace/funURL.git
-cd funURL
-sudo make install
-```
-
-To uninstall:
-```bash
-sudo make uninstall
-```
-
 ## Features
 
 ### URL Parsing
