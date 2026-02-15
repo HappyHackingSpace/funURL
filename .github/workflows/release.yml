@@ -101,14 +101,14 @@ jobs:
       - name: Pack root dotnet tool package
         run: dotnet pack funURL.CLI -c Release -p:Version=${{ steps.pkg_version.outputs.version }} -o nupkgs
 
-      - name: Push to NuGet
-        run: |
-          for pkg in artifacts/nupkg-*/*.nupkg nupkgs/*.nupkg; do
-            dotnet nuget push "$pkg" \
-              --api-key ${{ secrets.NUGET_API_KEY }} \
-              --source https://api.nuget.org/v3/index.json \
-              --skip-duplicate
-          done
+      # - name: Push to NuGet
+      #   run: |
+      #     for pkg in artifacts/nupkg-*/*.nupkg nupkgs/*.nupkg; do
+      #       dotnet nuget push "$pkg" \
+      #         --api-key ${{ secrets.NUGET_API_KEY }} \
+      #         --source https://api.nuget.org/v3/index.json \
+      #         --skip-duplicate
+      #     done
 
       - name: Create release
         env:
