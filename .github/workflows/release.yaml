@@ -16,7 +16,7 @@ jobs:
           - rid: linux-x64
             os: ubuntu-latest
           - rid: linux-arm64
-            os: ubuntu-latest
+            os: ubuntu-24.04-arm
           - rid: osx-x64
             os: macos-latest
           - rid: osx-arm64
@@ -36,21 +36,6 @@ jobs:
         with:
           dotnet-version: "10.0.x"
           dotnet-quality: "ga"
-
-      - name: Install cross-compilation toolchain
-        if: matrix.rid == 'linux-arm64'
-        run: |
-          sudo dpkg --add-architecture arm64
-          sudo sed -i 's/^Architectures: .*$/Architectures: amd64/' /etc/apt/sources.list.d/ubuntu.sources
-          sudo tee /etc/apt/sources.list.d/arm64-ports.sources > /dev/null <<'EOF'
-          Types: deb
-          URIs: http://ports.ubuntu.com/
-          Suites: noble noble-updates
-          Components: main restricted universe multiverse
-          Architectures: arm64
-          EOF
-          sudo apt-get update
-          sudo apt-get install -y clang llvm binutils-aarch64-linux-gnu
 
       - name: Publish
         run: dotnet publish funURL.CLI -c Release -r ${{ matrix.rid }} -o publish
