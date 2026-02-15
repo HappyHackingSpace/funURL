@@ -54,6 +54,15 @@ jobs:
           name: funurl-${{ matrix.rid }}
           path: funurl-${{ matrix.rid }}.zip
 
+      - name: Pack platform-specific tool
+        run: dotnet pack funURL.CLI -c Release -r ${{ matrix.rid }} -o nupkgs
+
+      - name: Upload nupkg
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-${{ matrix.rid }}
+          path: nupkgs/*.nupkg
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -78,6 +87,28 @@ jobs:
             echo "::error::Invalid version tag '$TAG'. Must match semver format (e.g. v1.0.0)."
             exit 1
           fi
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+          dotnet-quality: "ga"
+
+      - name: Extract version from tag
+        id: pkg_version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Pack root dotnet tool package
+        run: dotnet pack funURL.CLI -c Release -p:Version=${{ steps.pkg_version.outputs.version }} -o nupkgs
+
+      - name: Push to NuGet
+        run: |
+          for pkg in artifacts/nupkg-*/*.nupkg nupkgs/*.nupkg; do
+            dotnet nuget push "$pkg" \
+              --api-key ${{ secrets.NUGET_API_KEY }} \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
+          done
 
       - name: Create release
         env:

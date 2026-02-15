@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PublishAot>true</PublishAot>
+    <PublishSelfContained>true</PublishSelfContained>
+    <PublishTrimmed>true</PublishTrimmed>
     <OptimizationPreference>Size</OptimizationPreference>
     <StripSymbols>true</StripSymbols>
     <InvariantGlobalization>true</InvariantGlobalization>
@@ -13,6 +15,17 @@
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <EventSourceSupport>false</EventSourceSupport>
     <DebuggerSupport>false</DebuggerSupport>
+    <RuntimeIdentifiers>linux-x64;linux-arm64;osx-x64;osx-arm64;win-x64;win-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>funurl</ToolCommandName>
+    <PackageId>funurl</PackageId>
+    <Description>A Functional URL Swiss Army Knife 🛠️</Description>
+    <PackageProjectUrl>https://github.com/HappyHackingSpace/funURL</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="/" />
+    <None Include="../LICENSE.md" Pack="true" PackagePath="/" />
     <Folder Include="Commands/" />
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ Console.CancelKeyPress += (_, e) =>
     cancellationTokenSource.Cancel();
 };
 
-var rootCommand = new RootCommand("funURL - URL manipulation toolkit")
+var rootCommand = new RootCommand("funURL - A Functional URL Swiss Army Knife 🛠️")
 {
     ParseCommand.Create(),
     ModifyCommand.Create(),
