@@ -14,17 +14,17 @@ jobs:
       matrix:
         include:
           - rid: linux-x64
-            os: ubuntu-latest
+            os: ubuntu-24.04
           - rid: linux-arm64
             os: ubuntu-24.04-arm
           - rid: osx-x64
-            os: macos-latest
+            os: macos-13
           - rid: osx-arm64
-            os: macos-latest
+            os: macos-15
           - rid: win-x64
-            os: windows-latest
+            os: windows-2025
           - rid: win-arm64
-            os: windows-latest
+            os: windows-2025
 
     runs-on: ${{ matrix.os }}
 
@@ -101,20 +101,20 @@ jobs:
       - name: Pack root dotnet tool package
         run: dotnet pack funURL.CLI -c Release -p:Version=${{ steps.pkg_version.outputs.version }} -o nupkgs
 
-      # - name: Push to NuGet
-      #   run: |
-      #     for pkg in artifacts/nupkg-*/*.nupkg nupkgs/*.nupkg; do
-      #       dotnet nuget push "$pkg" \
-      #         --api-key ${{ secrets.NUGET_API_KEY }} \
-      #         --source https://api.nuget.org/v3/index.json \
-      #         --skip-duplicate
-      #     done
+      - name: Push to NuGet
+        run: |
+          for pkg in nupkgs/*.nupkg; do
+            dotnet nuget push "$pkg" \
+              --api-key ${{ secrets.NUGET_API_KEY }} \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
+          done
 
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
         run: >
           gh release create "${{ steps.version.outputs.tag }}"
-          artifacts/*
+          artifacts/*.zip
           --title "${{ steps.version.outputs.tag }}"
           --generate-notes

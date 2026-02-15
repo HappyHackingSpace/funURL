@@ -10,7 +10,24 @@ funURL is a command-line tool designed as a Swiss Army knife for URLs. It takes 
 
 ## Installation
 
+### .NET Tool
+
+```bash
+dotnet tool install --global funurl
+```
+
+### Binary Download
+
 Download the latest binary for your platform from the [Releases](https://github.com/HappyHackingSpace/funURL/releases) page.
+
+| Platform | File |
+|----------|------|
+| Linux x64 | `funurl-linux-x64.zip` |
+| Linux ARM64 | `funurl-linux-arm64.zip` |
+| macOS x64 | `funurl-osx-x64.zip` |
+| macOS ARM64 (Apple Silicon) | `funurl-osx-arm64.zip` |
+| Windows x64 | `funurl-win-x64.zip` |
+| Windows ARM64 | `funurl-win-arm64.zip` |
 
 ## Features
 
