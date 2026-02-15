@@ -37,6 +37,18 @@ jobs:
           dotnet-version: "10.0.x"
           dotnet-quality: "ga"
 
+      - name: Install cross-compilation toolchain
+        if: matrix.rid == 'linux-arm64'
+        run: |
+          sudo dpkg --add-architecture arm64
+          sudo bash -c 'cat > /etc/apt/sources.list.d/arm64.list <<EOF
+          deb [arch=arm64] http://ports.ubuntu.com/ noble main restricted universe multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ noble-updates main restricted universe multiverse
+          EOF'
+          sudo sed -i 's/^deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install -y clang llvm binutils-aarch64-linux-gnu
+
       - name: Publish
         run: dotnet publish funURL.CLI -c Release -r ${{ matrix.rid }} -o publish
 
