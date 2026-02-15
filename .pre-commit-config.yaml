@@ -1,0 +1,41 @@
+repos:
+  - repo: local
+    hooks:
+      - id: dotnet-tool-restore
+        name: Install .NET tools
+        entry: dotnet tool restore
+        language: system
+        always_run: true
+        pass_filenames: false
+        stages:
+          - pre-commit
+          - pre-push
+          - post-checkout
+          - post-rewrite
+        description: Install the .NET tools listed at dotnet-tools.json.
+
+      - id: csharpier
+        name: Run CSharpier on C# files
+        entry: dotnet tool run csharpier format
+        language: system
+        types:
+          - c#
+        description: CSharpier is an opinionated C# formatter inspired by Prettier.
+
+      - id: dotnet-build
+        name: Build solution
+        entry: dotnet build --no-restore --configuration Release
+        language: system
+        pass_filenames: false
+        types:
+          - c#
+        description: Build the solution to catch compilation errors.
+
+      - id: dotnet-test
+        name: Run tests
+        entry: dotnet test --no-restore --configuration Release
+        language: system
+        pass_filenames: false
+        types:
+          - c#
+        description: Run unit tests to catch logic errors.

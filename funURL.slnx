@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="funURL.CLI/funURL.CLI.csproj" />
+  <Project Path="funURL.CLI.Tests/funURL.CLI.Tests.csproj" />
+  <Folder Name="/Solution Items/">
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Makefile" />
+  </Folder>
+</Solution>

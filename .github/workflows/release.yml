@@ -1,0 +1,120 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - rid: linux-x64
+            os: ubuntu-latest
+          - rid: linux-arm64
+            os: ubuntu-latest
+          - rid: osx-x64
+            os: macos-latest
+          - rid: osx-arm64
+            os: macos-latest
+          - rid: win-x64
+            os: windows-latest
+          - rid: win-arm64
+            os: windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+          dotnet-quality: "ga"
+
+      - name: Publish
+        run: dotnet publish funURL.CLI -c Release -r ${{ matrix.rid }} -o publish
+
+      - name: Copy README and LICENSE
+        shell: pwsh
+        run: Copy-Item README.md, LICENSE.md -Destination publish/
+
+      - name: Archive
+        shell: pwsh
+        run: Compress-Archive -Path publish/* -DestinationPath funurl-${{ matrix.rid }}.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: funurl-${{ matrix.rid }}
+          path: funurl-${{ matrix.rid }}.zip
+
+      - name: Pack platform-specific tool
+        run: dotnet pack funURL.CLI -c Release -r ${{ matrix.rid }} -o nupkgs
+
+      - name: Upload nupkg
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-${{ matrix.rid }}
+          path: nupkgs/*.nupkg
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Determine version
+        id: version
+        run: echo "tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+
+      - name: Validate version
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid version tag '$TAG'. Must match semver format (e.g. v1.0.0)."
+            exit 1
+          fi
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+          dotnet-quality: "ga"
+
+      - name: Extract version from tag
+        id: pkg_version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Pack root dotnet tool package
+        run: dotnet pack funURL.CLI -c Release -p:Version=${{ steps.pkg_version.outputs.version }} -o nupkgs
+
+      - name: Push to NuGet
+        run: |
+          for pkg in artifacts/nupkg-*/*.nupkg nupkgs/*.nupkg; do
+            dotnet nuget push "$pkg" \
+              --api-key ${{ secrets.NUGET_API_KEY }} \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
+          done
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "${{ steps.version.outputs.tag }}"
+          artifacts/*
+          --title "${{ steps.version.outputs.tag }}"
+          --generate-notes
