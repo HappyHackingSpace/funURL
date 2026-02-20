@@ -1,7 +1,6 @@
 using System.CommandLine;
 using funURL.CLI.Core;
-using LanguageExt;
-using static LanguageExt.Prelude;
+using funURL.CLI.Functional;
 
 namespace funURL.CLI.Commands;
 
@@ -11,10 +10,10 @@ namespace funURL.CLI.Commands;
 public class ModifyCommand : Command
 {
     private readonly Argument<string> urlArgument = new("url") { Description = "URL to modify" };
-    private readonly System.CommandLine.Option<string?> protocolOption = new("--protocol", "-c") { Description = "Change protocol/scheme" };
-    private readonly System.CommandLine.Option<string?> pathOption = new("--path", "-p") { Description = "Update path" };
-    private readonly System.CommandLine.Option<string?> queryOption = new("--query", "-q") { Description = "Change query string" };
-    private readonly System.CommandLine.Option<string?> fragmentOption = new("--fragment", "-f") { Description = "Update fragment" };
+    private readonly Option<string?> protocolOption = new("--protocol", "-c") { Description = "Change protocol/scheme" };
+    private readonly Option<string?> pathOption = new("--path", "-p") { Description = "Update path" };
+    private readonly Option<string?> queryOption = new("--query", "-q") { Description = "Change query string" };
+    private readonly Option<string?> fragmentOption = new("--fragment", "-f") { Description = "Update fragment" };
 
     private ModifyCommand()
         : base("modify", "Modify components of a URL")

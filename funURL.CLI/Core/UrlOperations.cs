@@ -1,7 +1,5 @@
 using System.Net;
-using LanguageExt;
-using LanguageExt.Common;
-using static LanguageExt.Prelude;
+using funURL.CLI.Functional;
 
 namespace funURL.CLI.Core;
 
