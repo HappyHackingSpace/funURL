@@ -21,13 +21,13 @@ public class RootCommand : System.CommandLine.RootCommand
         Subcommands.Add(DedupeCommand.Create());
     }
 
-    public ParseResult Parse(IReadOnlyList<string> args, CancellationToken cancellationToken)
+    public async Task<ParseResult> Parse(IReadOnlyList<string> args, CancellationToken cancellationToken)
     {
         var parseResult = base.Parse(args, null);
 
         if (!parseResult.GetValue(silentOption))
         {
-            Console.Out.WriteAsync(FiggleFonts.Standard.Render("funURL").AsMemory(), cancellationToken);
+            await Console.Out.WriteAsync(FiggleFonts.Standard.Render("funURL").AsMemory(), cancellationToken);
         }
 
         return parseResult;

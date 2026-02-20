@@ -11,4 +11,6 @@ Console.CancelKeyPress += (_, e) =>
 
 var rootCommand = RootCommand.Create();
 
-return await rootCommand.Parse(args, cancellationToken).InvokeAsync(cancellationToken: cancellationToken);
+var parseResult = await rootCommand.Parse(args, cancellationToken);
+
+return await parseResult.InvokeAsync(cancellationToken: cancellationToken);
