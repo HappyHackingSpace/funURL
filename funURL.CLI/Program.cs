@@ -1,7 +1,7 @@
-﻿using System.CommandLine;
-using funURL.CLI.Commands;
+﻿using funURL.CLI.Commands;
 
 using var cancellationTokenSource = new CancellationTokenSource();
+var cancellationToken = cancellationTokenSource.Token;
 
 Console.CancelKeyPress += (_, e) =>
 {
@@ -9,13 +9,8 @@ Console.CancelKeyPress += (_, e) =>
     cancellationTokenSource.Cancel();
 };
 
-var rootCommand = new RootCommand("funURL - A Functional URL Swiss Army Knife 🛠️")
-{
-    ParseCommand.Create(),
-    ModifyCommand.Create(),
-    EncodeCommand.Create(),
-    DecodeCommand.Create(),
-    DedupeCommand.Create(),
-};
+var rootCommand = RootCommand.Create();
 
-return await rootCommand.Parse(args).InvokeAsync(cancellationToken: cancellationTokenSource.Token);
+var parseResult = await rootCommand.Parse(args, cancellationToken);
+
+return await parseResult.InvokeAsync(cancellationToken: cancellationToken);

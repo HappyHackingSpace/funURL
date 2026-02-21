@@ -1,5 +1,4 @@
 using funURL.CLI.Core;
-using LanguageExt;
 
 namespace funURL.CLI.Tests;
 

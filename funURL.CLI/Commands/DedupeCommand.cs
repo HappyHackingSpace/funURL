@@ -1,8 +1,7 @@
 using System.CommandLine;
 using System.Text.RegularExpressions;
 using funURL.CLI.Core;
-using LanguageExt;
-using static LanguageExt.Prelude;
+using funURL.CLI.Functional;
 
 namespace funURL.CLI.Commands;
 

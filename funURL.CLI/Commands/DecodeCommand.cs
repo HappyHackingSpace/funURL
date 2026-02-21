@@ -1,7 +1,6 @@
 using System.CommandLine;
 using funURL.CLI.Core;
-using LanguageExt;
-using static LanguageExt.Prelude;
+using funURL.CLI.Functional;
 
 namespace funURL.CLI.Commands;
 
@@ -11,10 +10,7 @@ namespace funURL.CLI.Commands;
 public class DecodeCommand : Command
 {
     private readonly Argument<string> inputArgument = new("input") { Description = "String to decode" };
-    private readonly System.CommandLine.Option<bool> queryOption = new("--query", "-c")
-    {
-        Description = "Decode as query component (handles + as spaces)",
-    };
+    private readonly Option<bool> queryOption = new("--query", "-c") { Description = "Decode as query component (handles + as spaces)" };
 
     private DecodeCommand()
         : base("decode", "URL-decode a string")
