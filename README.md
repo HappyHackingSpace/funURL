@@ -1,5 +1,3 @@
-![Made with love in Happy Hacking Space](https://madewithlove.now.sh/af?text=Happy+Hackking+Space)
-
 # funURL
 
 funURL is a command-line tool designed as a Swiss Army knife for URLs. It takes a URL as input (via stdin, command-line flags, or arguments) and provides a range of operations for parsing, validation, modification, encoding/decoding, and handling URLs efficiently.
@@ -136,4 +134,4 @@ Hack! don't forget to follow [CONTRIBUTING](./CONTRIBUTING)
 
 ---
 
-![Happy Hacking Space](img/hhs.svg)
+Happy Hacking Space
