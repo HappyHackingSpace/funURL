@@ -52,8 +52,13 @@ jobs:
           name: funurl-${{ matrix.rid }}
           path: funurl-${{ matrix.rid }}.zip
 
+      - name: Extract version from tag
+        id: pkg_version
+        shell: bash
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
       - name: Pack platform-specific tool
-        run: dotnet pack funURL.CLI -c Release -r ${{ matrix.rid }} -o nupkgs
+        run: dotnet pack funURL.CLI -c Release -r ${{ matrix.rid }} -p:Version=${{ steps.pkg_version.outputs.version }} -o nupkgs
 
       - name: Upload nupkg
         uses: actions/upload-artifact@v5
