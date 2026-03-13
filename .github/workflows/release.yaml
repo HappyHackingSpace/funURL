@@ -101,7 +101,7 @@ jobs:
 
       - name: Push to NuGet
         run: |
-          for pkg in nupkgs/*.nupkg; do
+          for pkg in artifacts/*.nupkg nupkgs/*.nupkg; do
             dotnet nuget push "$pkg" \
               --api-key ${{ secrets.NUGET_API_KEY }} \
               --source https://api.nuget.org/v3/index.json \

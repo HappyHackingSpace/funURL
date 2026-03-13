@@ -1,4 +1,4 @@
-<img src="https://madewithlove.now.sh/af?text=Happy+Hackking+Space" alt="Made with love in Happy Hackking Space">
+![Made with love in Happy Hacking Space](https://madewithlove.now.sh/af?text=Happy+Hackking+Space)
 
 # funURL
 
@@ -136,4 +136,4 @@ Hack! don't forget to follow [CONTRIBUTING](./CONTRIBUTING)
 
 ---
 
-<img src="img/hhs.svg" alt="Made with love in Happy Hackking Space">
+![Happy Hacking Space](img/hhs.svg)
