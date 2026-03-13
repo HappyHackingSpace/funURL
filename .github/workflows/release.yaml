@@ -17,8 +17,6 @@ jobs:
             os: ubuntu-24.04
           - rid: linux-arm64
             os: ubuntu-24.04-arm
-          - rid: osx-x64
-            os: macos-13
           - rid: osx-arm64
             os: macos-15
           - rid: win-x64
@@ -49,7 +47,7 @@ jobs:
         run: Compress-Archive -Path publish/* -DestinationPath funurl-${{ matrix.rid }}.zip
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: funurl-${{ matrix.rid }}
           path: funurl-${{ matrix.rid }}.zip
@@ -58,7 +56,7 @@ jobs:
         run: dotnet pack funURL.CLI -c Release -r ${{ matrix.rid }} -o nupkgs
 
       - name: Upload nupkg
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: nupkg-${{ matrix.rid }}
           path: nupkgs/*.nupkg
