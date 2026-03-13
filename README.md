@@ -24,7 +24,6 @@ Download the latest binary for your platform from the [Releases](https://github.
 |----------|------|
 | Linux x64 | `funurl-linux-x64.zip` |
 | Linux ARM64 | `funurl-linux-arm64.zip` |
-| macOS x64 | `funurl-osx-x64.zip` |
 | macOS ARM64 (Apple Silicon) | `funurl-osx-arm64.zip` |
 | Windows x64 | `funurl-win-x64.zip` |
 | Windows ARM64 | `funurl-win-arm64.zip` |
