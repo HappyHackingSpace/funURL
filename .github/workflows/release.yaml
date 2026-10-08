@@ -47,7 +47,7 @@ jobs:
         run: Compress-Archive -Path publish/* -DestinationPath funurl-${{ matrix.rid }}.zip
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: funurl-${{ matrix.rid }}
           path: funurl-${{ matrix.rid }}.zip
@@ -61,7 +61,7 @@ jobs:
         run: dotnet pack funURL.CLI -c Release -r ${{ matrix.rid }} -p:Version=${{ steps.pkg_version.outputs.version }} -o nupkgs
 
       - name: Upload nupkg
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: nupkg-${{ matrix.rid }}
           path: nupkgs/*.nupkg
