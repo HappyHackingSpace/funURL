@@ -130,8 +130,12 @@ funurl modify -c https -p /new/path http://vulnerabletarget.com/old
 
 ## Contributing
 
-Hack! don't forget to follow [CONTRIBUTING](./CONTRIBUTING)
+Hack! don't forget to follow [CONTRIBUTING](./CONTRIBUTING.md)
 
 ---
 
 Happy Hacking Space
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=HappyHackingSpace/funURL&type=Date)](https://star-history.com/#HappyHackingSpace/funURL&Date)
